@@ -1,9 +1,8 @@
 from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
-from pydantic import BaseModel
 
-from config import DATABASE_URL
+from settings import DATABASE_URL
 
 Base = declarative_base()
 
@@ -14,14 +13,11 @@ def connect_db():
     return session
 
 
-class Question(BaseModel):
-    questions_num: int
-
-
 class Quiz(Base):
     __tablename__ = 'quiz'
 
     id = Column(Integer, primary_key=True)
+    question_id = Column(Integer)
     answer = Column(String)
     question = Column(String)
     created_at = Column(String)

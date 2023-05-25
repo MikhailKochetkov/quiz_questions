@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
-from app.config import DATABASE_URL
+from settings import DATABASE_URL
 
 
 def main():
@@ -10,6 +10,7 @@ def main():
     session = Session(bind=engine.connect())
     session.execute(text("""create table quiz (
     id integer not null primary key,
+    question_id varchar(256),
     answer varchar(256),
     question varchar(256),
     created_at varchar(256),
