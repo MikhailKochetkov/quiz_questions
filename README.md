@@ -3,7 +3,6 @@
 [![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-### Описание
 
 ## Описание
 Сервис позволяет получать вопросы для викторин по запросу к публичному API https://jservice.io/api/random?count=1
