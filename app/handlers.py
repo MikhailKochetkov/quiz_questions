@@ -16,9 +16,13 @@ def get_data():
 
 
 def get_quiz_questions(num_questions):
+    session = next(get_db())
     quiz_questions = []
     for num in range(num_questions):
-        data = get_data()
+        while True:
+            data = get_data()
+            if not session.query(Quiz).filter_by(question_id=data["id"]).first():
+                break
         quiz_question = Quiz(
             question_id=data["id"],
             question=data["question"],
@@ -39,4 +43,4 @@ def create_quiz(question: Question, session: Session = Depends(get_db)):
         session.commit()
         session.refresh(quiz_question)
     session.close()
-    return {"quiz_questions": quiz_questions}
+    return {"quiz_questions": session.query(Quiz).order_by(Quiz.id.desc()).offset(1).first()}
