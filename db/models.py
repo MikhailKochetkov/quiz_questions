@@ -1,16 +1,7 @@
-from sqlalchemy import create_engine, Column, String, Integer
-from sqlalchemy.orm import Session
+from sqlalchemy import Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 
-from settings import DATABASE_URL
-
 Base = declarative_base()
-
-
-def connect_db():
-    engine = create_engine(DATABASE_URL, connect_args={})
-    session = Session(bind=engine.connect())
-    return session
 
 
 class Quiz(Base):

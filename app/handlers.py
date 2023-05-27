@@ -10,12 +10,12 @@ from settings import URL
 router = APIRouter()
 
 
-def get_data():
+def get_data() -> dict:
     response = requests.get(URL)
     return response.json()[0]
 
 
-def get_quiz_questions(num_questions):
+def get_quiz_questions(num_questions) -> list:
     session = next(get_db())
     quiz_questions = []
     for num in range(num_questions):
@@ -36,7 +36,7 @@ def get_quiz_questions(num_questions):
 
 
 @router.post("/quiz")
-def create_quiz(question: Question, session: Session = Depends(get_db)):
+def create_quiz(question: Question, session: Session = Depends(get_db)) -> dict:
     quiz_questions = get_quiz_questions(question.questions_num)
     for quiz_question in quiz_questions:
         session.add(quiz_question)
