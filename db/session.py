@@ -8,6 +8,7 @@ from .models import Quiz
 
 if TEST_MODE:
     engine = create_engine(CONNECTION_STRING, connect_args={"check_same_thread": False})
+    Quiz.metadata.create_all(engine)
     SessionLocal = sessionmaker(autoflush=False, bind=engine)
 else:
     engine = create_engine(PG_CONNECTION_STRING)
