@@ -2,11 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
-from settings import DATABASE_URL
+from db.db_connection import CONNECTION_STRING
 
 
 def main():
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(CONNECTION_STRING)
     session = Session(bind=engine.connect())
     session.execute(text("""create table quiz (
     id integer not null primary key,

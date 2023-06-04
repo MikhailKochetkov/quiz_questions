@@ -5,13 +5,13 @@ from sqlalchemy.orm import Session
 from db.models import Quiz
 from db.session import get_db
 from .schemas import Question
-from settings import URL
+from settings import DESTINATION_URL
 
 router = APIRouter()
 
 
 def get_data() -> dict:
-    response = requests.get(URL)
+    response = requests.get(DESTINATION_URL)
     return response.json()[0]
 
 
@@ -36,7 +36,9 @@ def get_quiz_questions(num_questions) -> list:
 
 
 @router.post("/quiz")
-def create_quiz(question: Question, session: Session = Depends(get_db)) -> dict:
+async def create_quiz(
+        question: Question,
+        session: Session = Depends(get_db)) -> dict:
     quiz_questions = get_quiz_questions(question.questions_num)
     for quiz_question in quiz_questions:
         session.add(quiz_question)
