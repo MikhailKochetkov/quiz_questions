@@ -3,12 +3,18 @@ version: '3.8'
 services:
   db:
     image: postgres:13.0-alpine
+    ports:
+      - "5432:5432"
     volumes:
       - database:/var/lib/postgresql/data/
     env_file:
       - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=questions
 
-  web:
+  app:
     build: .
     command: uvicorn main:application --host 0.0.0.0
     ports:
@@ -16,6 +22,8 @@ services:
     restart: always
     depends_on:
       - db
+    environment:
+      - PYTHONUNBUFFERED=1
     env_file:
       - .env
 
