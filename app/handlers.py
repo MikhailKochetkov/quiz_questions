@@ -35,7 +35,7 @@ def get_quiz_questions(num_questions) -> list:
     return quiz_questions
 
 
-@router.post("/quiz")
+@router.post("/quiz", tags=["Save questions"])
 async def create_quiz(
         question: Question,
         session: Session = Depends(get_db)) -> dict:
