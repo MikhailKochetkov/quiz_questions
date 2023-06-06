@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from .db_connection import CONNECTION_STRING, PG_CONNECTION_STRING
 from settings import TEST_MODE
-from .models import Quiz, Base
+from .models import Quiz
 
 
 if TEST_MODE:
@@ -12,8 +12,8 @@ if TEST_MODE:
     SessionLocal = sessionmaker(autoflush=False, bind=engine)
 else:
     engine = create_engine(PG_CONNECTION_STRING)
+    Quiz.metadata.create_all(engine)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    Base.metadata.create_all(bind=engine)
 
 
 def get_db():
