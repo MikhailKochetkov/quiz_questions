@@ -1,17 +1,25 @@
 version: '3.8'
 
+networks:
+  quiz_network:
+    driver: bridge
+
 services:
   db:
-    image: postgres:13.0-alpine
+    image: postgres:15.1-alpine
     restart: always
     volumes:
       - database:/var/lib/postgresql/data/
     env_file:
       - .env
+    networks:
+      - quiz_network
 
   app:
-    build: .
-    command: uvicorn main:application --host 0.0.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0"
     ports:
       - "8000:8000"
     restart: always
@@ -21,6 +29,8 @@ services:
       - PYTHONUNBUFFERED=1
     env_file:
       - .env
+    networks:
+      - quiz_network
 
 volumes:
   database:
