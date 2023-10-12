@@ -1,12 +1,9 @@
 import requests
 
 from uuid import uuid4
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
 
 from db.models import Quiz
-from db.session import get_session
 from settings import DESTINATION_URL
 
 
@@ -15,9 +12,7 @@ def get_data() -> dict:
     return response.json()[0]
 
 
-async def get_quiz_questions(
-        num_questions,
-        session: AsyncSession = Depends(get_session)) -> list:
+async def get_quiz_questions(num_questions, session) -> list:
     quiz_questions = []
     for num in range(num_questions):
         while True:
