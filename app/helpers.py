@@ -1,6 +1,5 @@
 import requests
 
-from uuid import uuid4
 from sqlalchemy.sql import select
 
 from db.models import Quiz
@@ -21,7 +20,6 @@ async def get_quiz_questions(num_questions, session) -> list:
             if not result.first():
                 break
         quiz_question = Quiz(
-            id=uuid4(),
             question_id=data['id'],
             question=data['question'],
             answer=data['answer'],

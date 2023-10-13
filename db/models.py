@@ -1,5 +1,4 @@
-from sqlalchemy import Column, String, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import String, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -10,8 +9,8 @@ class Base(DeclarativeBase):
 class Quiz(Base):
     __tablename__ = 'quiz'
 
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, index=True
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, index=True
     )
     question_id: Mapped[int] = mapped_column(Integer)
     answer: Mapped[str] = mapped_column(String)
