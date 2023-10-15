@@ -1,9 +1,9 @@
 from fastapi import FastAPI, APIRouter
-from app.handlers import router
+from app.handlers import quiz_router
 
 
-application = FastAPI(title="Questions for quiz")
+app = FastAPI(title="Questions for quiz")
 main_router = APIRouter()
 
-main_router.include_router(router)
-application.include_router(main_router)
+main_router.include_router(quiz_router)
+app.include_router(main_router)

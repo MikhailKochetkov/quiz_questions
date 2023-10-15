@@ -1,48 +1,35 @@
-import requests
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql import select
 
 from db.models import Quiz
-from db.session import get_db
-from .schemas import Question
-from settings import DESTINATION_URL
+from db.session import get_session
+from .schemas import QuestionRequest
+from .helpers import get_quiz_questions
 
-router = APIRouter()
-
-
-def get_data() -> dict:
-    response = requests.get(DESTINATION_URL)
-    return response.json()[0]
+quiz_router = APIRouter(prefix='/api/v1')
 
 
-def get_quiz_questions(num_questions) -> list:
-    session = next(get_db())
-    quiz_questions = []
-    for num in range(num_questions):
-        while True:
-            data = get_data()
-            if not session.query(Quiz).filter_by(question_id=data["id"]).first():
-                break
-        quiz_question = Quiz(
-            question_id=data["id"],
-            question=data["question"],
-            answer=data["answer"],
-            created_at=data["created_at"],
-            category_id=data["category_id"],
-            game_id=data["game_id"]
-        )
-        quiz_questions.append(quiz_question)
-    return quiz_questions
-
-
-@router.post("/quiz", tags=["Save questions"])
+@quiz_router.post(
+    '/quiz',
+    tags=['Quiz questions'],
+    status_code=status.HTTP_201_CREATED)
 async def create_quiz(
-        question: Question,
-        session: Session = Depends(get_db)) -> dict:
-    quiz_questions = get_quiz_questions(question.questions_num)
+        request: QuestionRequest,
+        session: AsyncSession = Depends(get_session)) -> dict:
+    quiz_questions = await get_quiz_questions(request.questions_count, session)
     for quiz_question in quiz_questions:
         session.add(quiz_question)
-        session.commit()
-        session.refresh(quiz_question)
-    session.close()
-    return {"quiz_questions": session.query(Quiz).order_by(Quiz.id.desc()).offset(1).first()}
+        await session.commit()
+        await session.refresh(quiz_question)
+    query = await session.execute(select(Quiz).order_by(Quiz.id.desc()).offset(1))
+    result = query.first()
+    await session.close()
+    if result is None:
+        return {}
+    return {'question_id': result[0].question_id,
+            'question': result[0].question,
+            'answer': result[0].answer,
+            'created_at': result[0].created_at,
+            'category_id': result[0].category_id,
+            'game_id': result[0].game_id}

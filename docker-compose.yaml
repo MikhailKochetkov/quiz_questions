@@ -1,17 +1,30 @@
 version: '3.8'
 
+networks:
+  quiz_network:
+    driver: bridge
+
 services:
   db:
-    image: postgres:13.0-alpine
+    image: postgres:15.1-alpine
     restart: always
     volumes:
       - database:/var/lib/postgresql/data/
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_DB=quiz
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - PG_DB_URL=postgresql+asyncpg://
+    networks:
+      - quiz_network
 
   app:
-    build: .
-    command: uvicorn main:application --host 0.0.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0"
     ports:
       - "8000:8000"
     restart: always
@@ -19,8 +32,9 @@ services:
       - db
     environment:
       - PYTHONUNBUFFERED=1
-    env_file:
-      - .env
+      - URL=https://jservice.io/api/random?count=1
+    networks:
+      - quiz_network
 
 volumes:
   database:

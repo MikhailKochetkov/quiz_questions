@@ -4,10 +4,15 @@
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 
-# Описание
-Сервис позволяет получать вопросы для викторин по запросу к публичному API https://jservice.io/api/random?count=1
+# Задание
+Реализовать простой веб сервис, выполняющий следующие функции:
+В сервисе должно быть реализовано REST API, принимающее на вход POST запросы с содержимым вида {"questions_num": integer}  ;
 
-## Как запустить проект:
+* После получения запроса сервис запрашивает с публичного API (англоязычные вопросы для викторин) https://jservice.io/api/random?count=1 указанное в полученном запросе количество вопросов.
+* Полученные ответы должны сохраняться в базе данных, причем сохранена должна быть как минимум следующая информация: 1. ID вопроса, 2. Текст вопроса, 3. Текст ответа, 4. - Дата создания вопроса. В случае, если в БД имеется такой же вопрос, к публичному API с викторинами должны выполняться дополнительные запросы до тех пор, пока не будет получен уникальный вопрос для викторины.
+* Ответом на запрос должен быть предыдущей сохранённый вопрос для викторины. В случае его отсутствия - пустой объект.
+
+# Запуск проекта
 
 Клонировать репозиторий:
 ```bash
@@ -24,54 +29,6 @@ python -m pip install --upgrade pip
 Установить зависимости из requirements.txt:
 ```bash
 pip install -r requirements.txt
-```
-
-Создать файл .env (шаблон наполнения размещен в файле .env.sample)
-
-### Запуск проекта в режиме разработки:
-
-Установить тестовый режим в настройках проекта (файл settings.py):
-```bash
-TEST_MODE = True
-```
-
-Запустить проект:
-```bash
-uvicorn main:application
-```
-
-### Запуск проекта в Docker (dockerfile):
-
-Установить тестовый режим в настройках проекта (файл settings.py):
-```bash
-TEST_MODE = True
-```
-
-Собрать образ:
-```bash
-docker build -t api .
-```
-
-Запустить контейнер:
-```bash
-docker run --name quiz_questions -it -p 8000:8000 api
-```
-
-Получить ID запущенного контейнера:
-```bash
-docker container ls
-```
-
-Остановить контейнер:
-```bash
-docker container stop <CONTAINER ID>
-```
-
-### Запуск проекта в Docker (docker-compose):
-
-Отключить тестовый режим в настройках проекта (файл settings.py):
-```bash
-TEST_MODE = False
 ```
 
 Собрать контейнеры:
@@ -95,25 +52,21 @@ docker-compose down -v
 Пример запроса:
 ```bash
 {
-  "questions_num": 1
+  "questions_count": 1
 }
 ```
 
 Пример ответа:
 ```bash
 {
-  "quiz_questions": {
-    "question_id": "116337",
-    "answer": "smell",
-    "created_at": "2022-12-30T19:49:18.669Z",
-    "game_id": "1607",
-    "id": 3,
-    "question": "1 reason sharks are successful predators is that large bulbs in their brains are used for this sense",
-    "category_id": "717"
-  }
+  "question_id": 26198,
+  "question": "Some folks don't add a potent potable to Welsh rarebit but many chefs add this one",
+  "answer": "beer",
+  "created_at": "2022-12-30T18:48:20.401Z",
+  "category_id": 63,
+  "game_id": 7531
 }
 ```
 
 # Автор
-
-* **Михаил Кочетков** - https://github.com/MikhailKochetkov
+**Михаил Кочетков** - https://github.com/MikhailKochetkov
