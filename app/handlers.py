@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
+from typing import Any
 
 from db.models import Quiz
 from db.session import get_session
@@ -16,7 +17,7 @@ quiz_router = APIRouter(prefix='/api/v1')
     status_code=status.HTTP_201_CREATED)
 async def create_quiz(
         request: QuestionRequest,
-        session: AsyncSession = Depends(get_session)) -> dict:
+        session: AsyncSession = Depends(get_session)) -> Any:
     quiz_questions = await get_quiz_questions(request.questions_count, session)
     for quiz_question in quiz_questions:
         session.add(quiz_question)
