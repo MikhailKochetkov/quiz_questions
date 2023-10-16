@@ -10,13 +10,8 @@ services:
     restart: always
     volumes:
       - database:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=quiz
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DB_HOST=db
-      - DB_PORT=5432
-      - PG_DB_URL=postgresql+asyncpg://
+    env_file:
+      - .env
     networks:
       - quiz_network
 
@@ -32,7 +27,8 @@ services:
       - db
     environment:
       - PYTHONUNBUFFERED=1
-      - URL=https://jservice.io/api/random?count=1
+    env_file:
+      - .env
     networks:
       - quiz_network
 

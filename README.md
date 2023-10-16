@@ -34,6 +34,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+Создать файл .env (шаблон наполнения размещен в файле .env.sample)
+
 Собрать контейнеры:
 ```bash
 docker-compose up -d --build
