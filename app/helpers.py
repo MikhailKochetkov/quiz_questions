@@ -6,12 +6,12 @@ from db.models import Quiz
 from settings import DESTINATION_URL
 
 
-def get_data() -> dict:
+def get_data():
     response = requests.get(DESTINATION_URL)
     return response.json()[0]
 
 
-async def get_quiz_questions(num_questions, session) -> list:
+async def get_quiz_questions(num_questions, session):
     quiz_questions = []
     for num in range(num_questions):
         while True:
